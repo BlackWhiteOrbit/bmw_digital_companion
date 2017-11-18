@@ -6,7 +6,7 @@ package medical_drive.bmw_digital_companion.bmw_rest_services;
 
 public enum ServiceTypes {
 
-    LIGHT_FLASH("light_flash"), CLIMATE_NOW("climate_now");
+    LIGHT_FLASH("light_flash"), CLIMATE_NOW("climate_now"), HORN_THE_HONK("horn_blow");
 
     private String htmlRestServiceType;
 

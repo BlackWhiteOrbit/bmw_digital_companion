@@ -45,6 +45,7 @@ public class RestCommunicator {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod(method.name());
+            connection.setRequestProperty(RestServiceConstants.API_HEADER_KEY, RestServiceConstants.API_HEADER_VALUE);
             connection.setRequestProperty("Accept", "application/json");
 
             if (connection.getResponseCode() != ACCEPTED_RESPONSE_CODE) {
