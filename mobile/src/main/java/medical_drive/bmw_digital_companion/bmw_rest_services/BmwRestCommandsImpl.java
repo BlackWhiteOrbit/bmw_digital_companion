@@ -1,5 +1,7 @@
 package medical_drive.bmw_digital_companion.bmw_rest_services;
 
+import java.net.MalformedURLException;
+
 /**
  * Created by Nicolas on 18/11/2017.
  */
@@ -40,25 +42,25 @@ public class BmwRestCommandsImpl implements BmwRestCommands {
 
     @Override
     public void vehiclesIdGet(String id) {
-        String path = "/vehicles" + id;
+        String path = "/vehicles/" + id;
         doCommunicate(path,RestMethod.GET);
     }
 
     @Override
     public void vehiclesIdOptions(String id) {
-        String path = "/vehicles" + id;
+        String path = "/vehicles/" + id;
         doCommunicate(path,RestMethod.OPTIONS);
     }
 
     @Override
     public void vehiclesIdDestinationsGet(String id) {
-        String path = "/vehicles" + id + "/destinations";
+        String path = "/vehicles/" + id + "/destinations";
         doCommunicate(path,RestMethod.GET);
     }
 
     @Override
     public void vehiclesIdDestinationsOptions(String id) {
-        String path = "/vehicles" + id + "/destinations";
+        String path = "/vehicles/" + id + "/destinations";
         doCommunicate(path,RestMethod.OPTIONS);
     }
 
@@ -70,48 +72,52 @@ public class BmwRestCommandsImpl implements BmwRestCommands {
 
     @Override
     public void vehiclesIdPoiOptions(String id) {
-        String path = "/vehicles" + id + "/poi";
+        String path = "/vehicles/" + id + "/poi";
         doCommunicate(path,RestMethod.OPTIONS);
     }
 
     @Override
     public void vehiclesIdServicesGet(String id) {
-        String path = "/vehicles" + id + "/services";
+        String path = "/vehicles/" + id + "/services";
         doCommunicate(path,RestMethod.GET);
     }
 
     @Override
     public void vehiclesIdServicesOptions(String id) {
-        String path = "/vehicles" + id + "/services";
+        String path = "/vehicles/" + id + "/services";
         doCommunicate(path,RestMethod.OPTIONS);
     }
 
     @Override
-    public void vehiclesIdServicesServiceTypeGet(String id, String serviceType) {
-        String path = "/vehicles" + id + "/services" + serviceType;
+    public void vehiclesIdServicesServiceTypeGet(String id, ServiceTypes serviceType) {
+        String path = "/vehicles/" + id + "/services/" + serviceType.getHtmlRestServiceType();
         doCommunicate(path,RestMethod.GET);
     }
 
     @Override
-    public void vehiclesIdServicesServiceTypeOptions(String id, String serviceType) {
-        String path = "/vehicles" + id + "/services" + serviceType;
+    public void vehiclesIdServicesServiceTypeOptions(String id, ServiceTypes serviceType) {
+        String path = "/vehicles/" + id + "/services/" + serviceType.getHtmlRestServiceType();
         doCommunicate(path,RestMethod.OPTIONS);
     }
 
     @Override
-    public void vehiclesIdServicesServiceTypeStatusGet(String id, String serviceType) {
-        String path = "/vehicles" + id + "/services" + serviceType + "/status";
+    public void vehiclesIdServicesServiceTypeStatusGet(String id, ServiceTypes serviceType) {
+        String path = "/vehicles/" + id + "/services/" + serviceType.getHtmlRestServiceType() + "/status";
         doCommunicate(path,RestMethod.GET);
     }
 
     @Override
-    public void vehiclesIdServicesServiceTypeStatusOptions(String id, String serviceType) {
-        String path = "/vehicles" + id + "/services" + serviceType + "/status";
+    public void vehiclesIdServicesServiceTypeStatusOptions(String id, ServiceTypes serviceType) {
+        String path = "/vehicles/" + id + "/services/" + serviceType.getHtmlRestServiceType() + "/status";
         doCommunicate(path,RestMethod.OPTIONS);
     }
 
     private void doCommunicate(String pathAppendix, RestMethod method) {
         String path = RestServiceConstants.PATH_ENDPOINT + pathAppendix;
-        restCommunicator.doCommunicate(path, method);
+        try {
+            restCommunicator.doCommunicate(path, method);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 }

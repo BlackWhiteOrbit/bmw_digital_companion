@@ -34,11 +34,11 @@ public interface BmwRestCommands {
 
     public void vehiclesIdServicesOptions(String id);
 
-    public void vehiclesIdServicesServiceTypeGet(String id, String serviceType);
+    public void vehiclesIdServicesServiceTypeGet(String id, ServiceTypes serviceType);
 
-    public void vehiclesIdServicesServiceTypeOptions(String id, String serviceType);
+    public void vehiclesIdServicesServiceTypeOptions(String id, ServiceTypes serviceType);
 
-    public void vehiclesIdServicesServiceTypeStatusGet(String id, String serviceType);
+    public void vehiclesIdServicesServiceTypeStatusGet(String id, ServiceTypes serviceType);
 
-    public void vehiclesIdServicesServiceTypeStatusOptions(String id, String serviceType);
+    public void vehiclesIdServicesServiceTypeStatusOptions(String id, ServiceTypes serviceType);
 }
