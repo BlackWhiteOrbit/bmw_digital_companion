@@ -11,6 +11,20 @@ public class OurBmwCommandsImplTest {
 
     private OurBmwCommandsImpl ourBmwCommands;
 
+    @Test
+    public void warningSystem() {
+        ourBmwCommands = new OurBmwCommandsImpl();
+        ourBmwCommands.startWarningSystem();
+
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        ourBmwCommands.stopWarningSystem();
+    }
+
 
     @Test
     public void doFlashlights() {
