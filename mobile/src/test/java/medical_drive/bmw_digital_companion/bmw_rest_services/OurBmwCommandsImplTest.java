@@ -25,7 +25,6 @@ public class OurBmwCommandsImplTest {
         ourBmwCommands.stopWarningSystem();
     }
 
-
     @Test
     public void doFlashlights() {
         ourBmwCommands = new OurBmwCommandsImpl();

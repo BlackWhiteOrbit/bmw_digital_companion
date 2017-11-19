@@ -1,10 +1,5 @@
 package medical_drive.bmw_digital_companion.medical_warning_system;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
-import medical_drive.bmw_digital_companion.bmw_rest_services.BmwRestCommands;
-import medical_drive.bmw_digital_companion.bmw_rest_services.BmwRestCommandsImpl;
 import medical_drive.bmw_digital_companion.bmw_rest_services.OurBmwCommandsImpl;
 
 /**
@@ -12,6 +7,10 @@ import medical_drive.bmw_digital_companion.bmw_rest_services.OurBmwCommandsImpl;
  */
 
 public class MedicalWarningHandler extends  Thread{
+
+    private final String DIZZINESS_HEADER = "Dizziness state changed: ";
+    private final String BLOOD_SUGAR_HEADER = "Blood sugar state changed: ";
+    private final String EMERGENCY_MESSAGE = "Emergency was called! Help is coming soon! : ";
 
     private WarningSystem dizzinessWarningSystem;
     private WarningSystem bloodSugarWarningSystem;
@@ -42,7 +41,7 @@ public class MedicalWarningHandler extends  Thread{
 
     public void startMedicalThread() {
         isRunning = true;
-        run();
+        start();
     }
 
     public void stopMedicalThread() {
@@ -62,49 +61,59 @@ public class MedicalWarningHandler extends  Thread{
 
     private void handleDizzinessWarnings() {
 
-        if (oldDizzinessWarning != actualDizzinessWarning) {
-            handleMessage(actualDizzinessWarning.getMessage());
+        if (oldDizzinessWarning == actualDizzinessWarning) {
+            return;
         }
 
         switch (actualDizzinessWarning) {
             case NOT_DIZZY:
                 stopWarningSystems();
+                infoMessage(DIZZINESS_HEADER + actualDizzinessWarning.getMessage());
                 break;
             case DIZZY:
                 stopWarningSystems();
+                warningMessage(DIZZINESS_HEADER + actualDizzinessWarning.getMessage());
                 break;
             case HIGH_DIZZINESS:
                 startWarningSystems();
+                emergencyMessage(DIZZINESS_HEADER + actualDizzinessWarning.getMessage());
                 break;
         }
     }
 
     private void handleBloodSugarWarnings() {
 
-        if (oldBloodSugarWarning != actualBloodSugarWarning) {
-            handleMessage(actualBloodSugarWarning.getMessage());
+        if (oldBloodSugarWarning == actualBloodSugarWarning) {
+            return;
         }
 
         switch (actualBloodSugarWarning) {
             case BLOOD_SUGAR_TOO_HIGH_INFO:
                 stopWarningSystems();
+                infoMessage(BLOOD_SUGAR_HEADER + actualBloodSugarWarning.getMessage());
                 break;
             case NORMAL_BLOOD_SUGAR:
                 stopWarningSystems();
+                infoMessage(BLOOD_SUGAR_HEADER + actualBloodSugarWarning.getMessage());
                 break;
             case BLOOD_SUGAR_TOO_LOW_INFO:
                 stopWarningSystems();
+                infoMessage(BLOOD_SUGAR_HEADER + actualBloodSugarWarning.getMessage());
                 break;
             case WARNING:
                 stopWarningSystems();
+                warningMessage(BLOOD_SUGAR_HEADER + actualBloodSugarWarning.getMessage());
                 break;
             case DANGER_WARNING:
-                stopWarningSystems();
+                startWarningSystems();
+                emergencyMessage(BLOOD_SUGAR_HEADER + actualBloodSugarWarning.getMessage());
                 break;
             case EMERGENCY_CALL:
-                stopWarningSystems();
+                startWarningSystems();
+                emergencyMessage(BLOOD_SUGAR_HEADER + actualBloodSugarWarning.getMessage());
                 if (actualDizzinessWarning == DizzinessWarnings.HIGH_DIZZINESS) {
-                    //Emergency call
+                    //TODO improve
+                    emergencyMessage(EMERGENCY_MESSAGE);
                 }
                 break;
         }
@@ -114,6 +123,10 @@ public class MedicalWarningHandler extends  Thread{
         if (!warningSystemsOn) {
             warningSystemsOn = true;
             ourBmwCommandsImpl.startWarningSystem();
+            //For testing
+            System.out.println("Warning system started");
+        } else {
+            System.out.println("Warning system is still in progress");
         }
     }
 
@@ -123,10 +136,24 @@ public class MedicalWarningHandler extends  Thread{
                 && actualBloodSugarWarning != BloodSugarWarnings.EMERGENCY_CALL) {
             warningSystemsOn = false;
             ourBmwCommandsImpl.stopWarningSystem();
+            //For testing
+            System.out.println("Warning system stopped");
+        } else {
+            System.out.println("Warning system is still stopped");
         }
     }
 
-    private void handleMessage(String message) {
+    private void infoMessage(String message) {
+        //TODO Do something with the message!
+        System.out.println(message);
+    }
+
+    private void warningMessage(String message) {
+        //TODO Do something with the message!
+        System.out.println(message);
+    }
+
+    private void emergencyMessage(String message) {
         //TODO Do something with the message!
         System.out.println(message);
     }

@@ -9,7 +9,11 @@ public class BloodSugarWarningSystem implements WarningSystem{
     private BloodSugarData bloodSugarData;
 
     public BloodSugarWarnings giveWarnings() {
+        bloodSugarData = new BloodSugarData();
         int bloodSugarLevel = bloodSugarData.getLevelInMGPerLitre();
+
+        //TODO change
+        bloodSugarLevel = 55;
 
         if(bloodSugarLevel < 50) return BloodSugarWarnings.EMERGENCY_CALL;
         else if (bloodSugarLevel < 60) return BloodSugarWarnings.DANGER_WARNING;

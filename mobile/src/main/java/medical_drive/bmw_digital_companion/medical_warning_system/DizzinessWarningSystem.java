@@ -10,7 +10,11 @@ public class DizzinessWarningSystem implements WarningSystem{
 
     @Override
     public DizzinessWarnings giveWarnings() {
+        dizzinessData = new DizzinessData();
         double dizzinessLevel = dizzinessData.getLevelBetweenZeroAndOne();
+
+        //TODO change
+        dizzinessLevel = 0.6;
 
         if (dizzinessLevel > 0.8 && dizzinessLevel <= 1) return DizzinessWarnings.HIGH_DIZZINESS;
         else if (dizzinessLevel > 0.5 && dizzinessLevel <= 0.8) return DizzinessWarnings.DIZZY;

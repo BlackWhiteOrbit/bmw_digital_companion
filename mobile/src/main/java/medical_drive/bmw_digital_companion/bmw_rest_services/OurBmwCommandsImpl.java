@@ -9,7 +9,7 @@ import java.util.Timer;
 
 public class OurBmwCommandsImpl {
 
-    public static final int WAITING_TIME_BETWEEN_WARNING_SIGNALS_IN_MILLIS = 6000;
+    public static final int WAITING_TIME_BETWEEN_WARNING_SIGNALS_IN_MILLIS = 10000;
 
     private BmwRestCommands bmwRestCommands;
     private Thread warningTimer;
