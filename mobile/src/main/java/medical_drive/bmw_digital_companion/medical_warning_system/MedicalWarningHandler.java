@@ -6,19 +6,19 @@ import medical_drive.bmw_digital_companion.bmw_rest_services.OurBmwCommandsImpl;
  * Created by Nicolas on 18/11/2017.
  */
 
-public class MedicalWarningHandler extends  Thread{
+public class MedicalWarningHandler {
 
     private final String DIZZINESS_HEADER = "Dizziness state changed: ";
     private final String BLOOD_SUGAR_HEADER = "Blood sugar state changed: ";
     private final String EMERGENCY_MESSAGE = "Emergency was called! Help is coming soon! : ";
 
-    private WarningSystem dizzinessWarningSystem;
-    private WarningSystem bloodSugarWarningSystem;
+    private DizzinessWarningSystem dizzinessWarningSystem;
+    private BloodSugarWarningSystem bloodSugarWarningSystem;
 
-    private DizzinessWarnings actualDizzinessWarning = null;
-    private BloodSugarWarnings actualBloodSugarWarning = null;
-    private DizzinessWarnings oldDizzinessWarning = null;
-    private BloodSugarWarnings oldBloodSugarWarning = null;
+    private DizzinessWarnings actualDizzinessWarning = DizzinessWarnings.NOT_DIZZY;
+    private BloodSugarWarnings actualBloodSugarWarning = BloodSugarWarnings.NORMAL_BLOOD_SUGAR;
+    private DizzinessWarnings oldDizzinessWarning = DizzinessWarnings.NOT_DIZZY;
+    private BloodSugarWarnings oldBloodSugarWarning = BloodSugarWarnings.NORMAL_BLOOD_SUGAR;
 
     private OurBmwCommandsImpl ourBmwCommandsImpl;
     private boolean warningSystemsOn = false;
@@ -32,30 +32,14 @@ public class MedicalWarningHandler extends  Thread{
         ourBmwCommandsImpl = new OurBmwCommandsImpl();
     }
 
-    @Override
-    public void run() {
-        while (isRunning) {
-            handleWarnings();
-        }
-    }
+    public void handleWarnings(BloodSugarWarnings actualBloodSugarWarning) {
+        //actualDizzinessWarning = dizzinessWarningSystem.giveWarnings();
+        this.actualBloodSugarWarning = actualBloodSugarWarning;
 
-    public void startMedicalThread() {
-        isRunning = true;
-        start();
-    }
-
-    public void stopMedicalThread() {
-        isRunning = false;
-    }
-
-    private void handleWarnings() {
-        actualDizzinessWarning = (DizzinessWarnings) dizzinessWarningSystem.giveWarnings();
-        actualBloodSugarWarning = (BloodSugarWarnings) bloodSugarWarningSystem.giveWarnings();
-
-        handleDizzinessWarnings();
+        //handleDizzinessWarnings();
         handleBloodSugarWarnings();
 
-        oldDizzinessWarning = actualDizzinessWarning;
+        //oldDizzinessWarning = actualDizzinessWarning;
         oldBloodSugarWarning = actualBloodSugarWarning;
     }
 

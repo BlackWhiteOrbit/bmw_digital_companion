@@ -9,7 +9,7 @@ import java.util.Timer;
 
 public class OurBmwCommandsImpl {
 
-    public static final int WAITING_TIME_BETWEEN_WARNING_SIGNALS_IN_MILLIS = 10000;
+    public static final int WAITING_TIME_BETWEEN_WARNING_SIGNALS_IN_MILLIS = 10;
 
     private BmwRestCommands bmwRestCommands;
     private Thread warningTimer;
@@ -25,21 +25,20 @@ public class OurBmwCommandsImpl {
             @Override
             public void run() {
                 while (warningIsRunning) {
-                    try {
-                        Thread.sleep(WAITING_TIME_BETWEEN_WARNING_SIGNALS_IN_MILLIS);
-                        doFlashLights();
-                        hornTheHonk();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    hornTheHonk();
+                    doFlashLights();
                 }
             }
         });
     }
 
     public void startWarningSystem() {
+        for (int i = 0; i <= 1; i++) {
+            hornTheHonk();
+            doFlashLights();
+        }
         warningIsRunning = true;
-        warningTimer.start();
+        //warningTimer.start();
     }
 
     public void stopWarningSystem() {
@@ -51,6 +50,6 @@ public class OurBmwCommandsImpl {
     }
 
     public void hornTheHonk() {
-        bmwRestCommands.vehiclesIdServicesServiceTypeGet(RestServiceConstants.BMW_I5_ID, ServiceTypes.LIGHT_FLASH);
+        bmwRestCommands.vehiclesIdServicesServiceTypeGet(RestServiceConstants.BMW_I5_ID, ServiceTypes.HORN_THE_HONK);
     }
 }

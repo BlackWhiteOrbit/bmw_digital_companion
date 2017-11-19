@@ -1,55 +1,58 @@
 package medical_drive.bmw_digital_companion;
 
+import android.app.Activity;
+import android.content.Context;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import medical_drive.bmw_digital_companion.datamodel.GlucoseHistory;
+import medical_drive.bmw_digital_companion.medical_warning_system.BloodSugarWarningSystem;
+import medical_drive.bmw_digital_companion.medical_warning_system.MedicalWarningHandler;
 
-public class BloodSugarMonitor implements Runnable {
+public class BloodSugarMonitor {
 	
 	private double time;
-	private double glucoseConcentration = 0;
-	private FileInputStream inputStreamSource;
+	private int glucoseConcentration = 0;
+	//private FileInputStream inputStreamSource;
 	private boolean abort = false;;
-	private static final int TIME_INTERVAL = 4000;
+	private static final int TIME_INTERVAL = 1000;
 	private GlucoseHistory glucoseHistory;
+	int index = 0;
+
+
+	private int[] bloodSugarLevels = {
+			110, 105, 96, 93, 93, 95, 90, 80, 70, 69, 70, 68, 67,
+			65, 64, 62, 59, 58, 60, 65, 78, 84, 93, 100, 105};
 	
 	public BloodSugarMonitor(){		
-		inputStreamInit();
-		setGlucoseHistory(new GlucoseHistory());
+		//inputStreamInit();
+		glucoseHistory = new GlucoseHistory();
 	}
 
-
-	private void inputStreamInit() {
-		try {
-			inputStreamSource = new FileInputStream("sensorGlucose");
-			
-		} catch (FileNotFoundException e) {
-			System.out.println("File not found !");
-		}
-	}
-	
-
-	@Override
-	public void run() {
+	public void produceBloodSugarValues() {
 		
-		BufferedReader input = new BufferedReader(
-				new InputStreamReader(inputStreamSource));
-		String line = null;
+		//BufferedReader input = new BufferedReader(new InputStreamReader(
+		//		inputStreamSource));
 
-		String responseData = "0";
-		
+		BloodSugarWarningSystem bloodSugarWarningSystem = new BloodSugarWarningSystem();
+		MedicalWarningHandler medicalWarningHandler = new MedicalWarningHandler();
+
 		while(!abort){
-			readIn(input, line, responseData);
+			readIn();
 			safeData(glucoseConcentration);
-			System.out.println("Sensored Glucose-Level: "+glucoseConcentration);
-			
+			System.out.println("Sensored Glucose-Level: " + glucoseConcentration);
+
+			//TODO Please refactore me! I want to die!
+			medicalWarningHandler.handleWarnings(bloodSugarWarningSystem.giveWarnings(glucoseConcentration));
+
 			try {
 				Thread.sleep(TIME_INTERVAL);
 			} catch (InterruptedException e) {
@@ -60,20 +63,21 @@ public class BloodSugarMonitor implements Runnable {
 
 	}
 
-
-	private synchronized void safeData(double glucoseConcentration) {
+	private synchronized void safeData(int glucoseConcentration) {
 		glucoseHistory.addWithCurrentTime(glucoseConcentration);
 	}
 
 
-	private Double readIn(BufferedReader input, String line,
-			String responseData) {
+	private int readIn() {
 		try {
-			if((responseData = input.readLine()) != null) {
-				glucoseConcentration = Double.parseDouble(responseData); 
+			if (bloodSugarLevels.length > index) {
+				glucoseConcentration = bloodSugarLevels[index];
+				index++;
+			} else {
+				index = 0;
+				//abort = true;
 			}
-			else{abort = true;}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Something went wrong!");
 		}
@@ -85,14 +89,14 @@ public class BloodSugarMonitor implements Runnable {
 	/**
 	 * @return the glucoseConcentration
 	 */
-	public double getGlucoseConcentration() {
+	public int getGlucoseConcentration() {
 		return glucoseConcentration;
 	}
 
 	/**
 	 * @param glucoseConcentration the glucoseConcentration to set
 	 */
-	public void setGlucoseConcentration(double glucoseConcentration) {
+	public void setGlucoseConcentration(int glucoseConcentration) {
 		this.glucoseConcentration = glucoseConcentration;
 	}
 

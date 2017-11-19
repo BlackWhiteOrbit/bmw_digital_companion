@@ -1,6 +1,5 @@
 package medical_drive.bmw_digital_companion.bmw_rest_services;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
